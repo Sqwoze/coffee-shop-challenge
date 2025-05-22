@@ -1,7 +1,7 @@
 from order import Order
 
 class Customer:
-    _all = []  # keeps track of every Customer created
+    _all = []
 
     def __init__(self, name):
         self.name = name

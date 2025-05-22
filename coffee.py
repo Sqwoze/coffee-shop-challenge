@@ -1,25 +1,28 @@
-from dataclasses import dataclass
+from order import Order
 
-@dataclass(frozen=True)
 class Coffee:
-    _name: str
+    _all = []
 
-    def __post_init__(self):
-        if not isinstance(self._name, str):
-            raise ValueError("Name must be a string.")
-        if len(self._name) < 3:
-            raise ValueError("Name must be at least 3 characters long.")
+    def __init__(self, name):
+        if isinstance(name, str) and len(name) >= 3:
+            self._name = name
+        else:
+            raise ValueError("Coffee name must be at least 3 characters.")
+        Coffee._all.append(self)
 
     @property
     def name(self):
         return self._name
 
-coffee_input = input("Enter The type of coffee you'd like: ")
+    def orders(self):
+        return [order for order in Order._all if order.coffee == self]
 
-try:
-    coffee = Coffee(coffee_input)
-    print(f"You chose a {coffee_input}")
+    def customers(self):
+        return list(set(order.customer for order in self.orders()))
 
-        
-except ValueError as e:
-    print(f"Error: {e}")
+    def num_orders(self):
+        return len(self.orders())
+
+    def average_price(self):
+        orders = self.orders()
+        return sum(order.price for order in orders) / len(orders) if orders else 0.0
